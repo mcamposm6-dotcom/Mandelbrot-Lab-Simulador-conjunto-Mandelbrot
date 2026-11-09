@@ -1,0 +1,314 @@
+
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#071124">
+  <title>MANDELBROT LAB | PHYMATH 2026 · UNEMI</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <div class="ambient" aria-hidden="true">
+    <div class="wave wave-one"></div>
+    <div class="wave wave-two"></div>
+    <div id="particles"></div>
+  </div>
+
+  <section class="screen welcome active" id="welcome">
+    <div class="welcome-content glass">
+      <p class="eyebrow">UNEMI · PHYMATH 2026</p>
+      <div class="symbol">✦</div>
+      <h1>MANDELBROT <span>LAB</span></h1>
+      <p class="hero-sub">Explora la geometría del infinito</p>
+      <p class="hero-desc">
+        Un laboratorio virtual para descubrir cómo los números
+        complejos producen estructuras fractales extraordinarias.
+      </p>
+      <button id="toCredits" class="button primary massive">
+        EMPEZAR →
+      </button>
+      <p class="welcome-foot">Explora · Experimenta · Comprende</p>
+    </div>
+  </section>
+
+  <section class="screen credits" id="credits" hidden>
+    <div class="credits-card glass">
+      <p class="eyebrow">PRESENTACIÓN INSTITUCIONAL</p>
+      <h2>Proyecto de Feria Científica</h2>
+      <div class="credits-brand">MANDELBROT <span>LAB</span></div>
+      <div class="credits-grid">
+        <div><span class="field">Institución</span><strong>Universidad Estatal de Milagro · UNEMI</strong></div>
+        <div><span class="field">Evento</span><strong>PHYMATH 2026</strong></div>
+        <div><span class="field">Facultad</span><strong>[Nombre de la facultad]</strong></div>
+        <div><span class="field">Carrera</span><strong>Pedagogía de las Ciencias Experimentales</strong></div>
+        <div><span class="field">Asignatura</span><strong>[Nombre de la asignatura]</strong></div>
+        <div><span class="field">Docente responsable</span><strong>[Nombre del docente]</strong></div>
+        <div class="full"><span class="field">Integrantes</span><strong>[Integrante 1] · [Integrante 2] · [Integrante 3]</strong></div>
+      </div>
+      <div class="credits-actions">
+        <button id="backWelcome" class="button outline">← Volver</button>
+        <button id="toLab" class="button primary">INGRESAR AL SIMULADOR →</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="screen lab" id="lab" hidden>
+    <header class="topbar glass">
+      <a href="#" id="logoHome" class="brand">
+        <span class="brand-logo">M</span>
+        <span>MANDELBROT <em>LAB</em></span>
+      </a>
+      <span class="top-tag">UNEMI · PHYMATH 2026</span>
+      <button id="homeBtn" class="button small outline">⌂ Inicio</button>
+    </header>
+
+    <main class="lab-layout">
+      <div class="lab-heading">
+        <p class="eyebrow">LABORATORIO VIRTUAL INTERACTIVO</p>
+        <h2>Conjunto de Mandelbrot</h2>
+        <p>
+          Modifica los parámetros, genera el fractal y analiza
+          los valores de c y z₀ para estudiar el escape de la órbita.
+        </p>
+      </div>
+
+      <div class="lab-grid">
+        <div class="visual-column">
+          <article class="card glow-cyan" id="fractalCard">
+            <div class="card-head">
+              <span class="number">01</span>
+              <div>
+                <h3>Plano complejo · Conjunto de Mandelbrot</h3>
+                <p class="mini">Haz clic para seleccionar un punto</p>
+              </div>
+            </div>
+            <div class="canvas-holder fractal-holder">
+              <canvas id="fractalCanvas" width="750" height="430"></canvas>
+              <canvas id="overlayCanvas" width="750" height="430"></canvas>
+              <div class="canvas-placeholder" id="fractalPlaceholder">
+                <span>✧</span> Pulsa «Iniciar» para generar el fractal
+              </div>
+            </div>
+            <p class="micro-note">
+              Los colores indican las iteraciones hasta el escape.
+            </p>
+          </article>
+
+          <article class="card" id="orbitCard">
+            <div class="card-head">
+              <span class="number violet">02</span>
+              <div>
+                <h3>Órbita del número complejo</h3>
+                <p class="mini">Evolución de Re(zₙ) e Im(zₙ)</p>
+              </div>
+            </div>
+            <div class="canvas-holder graph-holder">
+              <canvas id="orbitCanvas" width="750" height="240"></canvas>
+            </div>
+            <div class="legend">
+              <span><i class="dot cyan"></i> Parte real</span>
+              <span><i class="dot violet"></i> Parte imaginaria</span>
+            </div>
+          </article>
+
+          <article class="card" id="moduleCard">
+            <div class="card-head">
+              <span class="number gold">03</span>
+              <div>
+                <h3>Evolución del módulo |zₙ|</h3>
+                <p class="mini">Umbral de escape indicado con línea punteada</p>
+              </div>
+            </div>
+            <div class="canvas-holder graph-holder">
+              <canvas id="moduleCanvas" width="750" height="240"></canvas>
+            </div>
+            <div class="legend">
+              <span><i class="dot gold"></i> Módulo |zₙ|</span>
+              <span><i class="dot red"></i> <span id="escapeThresholdLegend">Umbral = 2</span></span>
+            </div>
+          </article>
+
+          <article class="card" id="tableCard">
+            <div class="card-head">
+              <span class="number gold">04</span>
+              <div>
+                <h3>Tabla de resultados matemáticos</h3>
+                <p class="mini">Iteraciones del punto seleccionado</p>
+              </div>
+            </div>
+            <p class="mini">
+              Punto c: <strong id="tablePoint">Sin calcular</strong>
+              · z₀: <strong id="tableInitial">0 + 0i</strong>
+            </p>
+            <div class="table-scroll">
+              <table class="results-table">
+                <thead>
+                  <tr>
+                    <th>n</th><th>Re(zₙ)</th><th>Im(zₙ)</th>
+                    <th>|zₙ|</th><th>Estado</th>
+                  </tr>
+                </thead>
+                <tbody id="tableBody">
+                  <tr><td colspan="5">Inicia el simulador para calcular resultados.</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="table-footer">
+              <span id="tableCount">0 registros</span>
+              <button id="exportCSV" class="button small outline">
+                ↓ Exportar CSV
+              </button>
+            </div>
+          </article>
+        </div>
+
+        <aside class="side-column">
+          <article class="card controls-card glow-violet">
+            <div class="card-head">
+              <span class="number violet">⚙</span>
+              <h3>Panel de control</h3>
+            </div>
+
+            <div class="slider-control">
+              <label for="iterations">Iteraciones máximas <output id="iterationsOut">180</output></label>
+              <input id="iterations" type="range" min="30" max="600" step="10" value="180">
+            </div>
+            <div class="slider-control">
+              <label for="zoom">Zoom <output id="zoomOut">1.00×</output></label>
+              <input id="zoom" type="range" min="1" max="12" step="0.25" value="1">
+            </div>
+            <div class="slider-control">
+              <label for="centerReal">Centro real <output id="centerRealOut">−0.50</output></label>
+              <input id="centerReal" type="range" min="-2" max="1" step="0.025" value="-0.5">
+            </div>
+            <div class="slider-control">
+              <label for="centerImag">Centro imaginario <output id="centerImagOut">0.00</output></label>
+              <input id="centerImag" type="range" min="-1.3" max="1.3" step="0.025" value="0">
+            </div>
+            <div class="slider-control">
+              <label for="palette">Paleta</label>
+              <select id="palette">
+                <option value="cosmic">Cósmica</option>
+                <option value="ocean">Océano</option>
+                <option value="fire">Fuego</option>
+                <option value="mono">Monocromática</option>
+              </select>
+            </div>
+
+            <div class="complex-editor">
+              <h4>Explorar c y z₀</h4>
+              <p class="mini">
+                Para analizar el conjunto de Mandelbrot utiliza z₀ = 0.
+                Si cambias z₀, estudias otra órbita de la ecuación.
+              </p>
+              <div class="complex-grid">
+                <label>Re(c)<input id="cRealInput" type="number" step="any" value="-1"></label>
+                <label>Im(c)<input id="cImagInput" type="number" step="any" value="0"></label>
+                <label>Re(z₀)<input id="zRealInput" type="number" step="any" value="0"></label>
+                <label>Im(z₀)<input id="zImagInput" type="number" step="any" value="0"></label>
+              </div>
+              <button id="analyzeComplexBtn" class="button primary wide">
+                Calcular si escapa
+              </button>
+              <div class="preset-complex">
+                <button class="button small outline complex-preset" data-a="0" data-b="0">c = 0</button>
+                <button class="button small outline complex-preset" data-a="-1" data-b="0">c = −1</button>
+                <button class="button small outline complex-preset" data-a="1" data-b="0">c = 1</button>
+              </div>
+              <p id="complexMessage" class="complex-message" role="status">
+                Introduce un número complejo y pulsa Calcular si escapa.
+              </p>
+            </div>
+
+            <div class="checkbox-group">
+              <span class="field">Mostrar gráficas</span>
+              <label><input id="showFractal" type="checkbox" checked> Fractal</label>
+              <label><input id="showOrbit" type="checkbox" checked> Órbita</label>
+              <label><input id="showModule" type="checkbox" checked> Módulo</label>
+              <label><input id="showGrid" type="checkbox" checked> Cuadrícula</label>
+            </div>
+            <div class="control-buttons">
+              <button id="startBtn" class="button primary">▶ Iniciar</button>
+              <button id="pauseBtn" class="button warm" disabled>Ⅱ Pausar</button>
+              <button id="continueBtn" class="button outline" disabled>▶ Continuar</button>
+              <button id="restartBtn" class="button outline">↻ Reiniciar</button>
+              <button id="defaultsBtn" class="button muted wide">Restablecer parámetros</button>
+            </div>
+            <p id="changesHint" class="mini">Ajusta los parámetros y pulsa Iniciar.</p>
+          </article>
+
+          <article class="card result-card">
+            <div class="card-head">
+              <span class="number gold">▥</span>
+              <h3>Resultados del simulador</h3>
+            </div>
+            <div class="metrics">
+              <div><span>Iteraciones</span><strong id="metricIter">180</strong></div>
+              <div><span>Zoom</span><strong id="metricZoom">1.00×</strong></div>
+              <div><span>Punto c</span><strong id="metricC">−1 + 0i</strong></div>
+              <div><span>Valor inicial z₀</span><strong id="metricZ0">0 + 0i</strong></div>
+              <div><span>Escape</span><strong id="metricEscape">Sin calcular</strong></div>
+            </div>
+            <div class="status-line">
+              <span>Estado</span><strong id="statusText">● Listo</strong>
+            </div>
+            <div class="status-line">
+              <span>Progreso</span><strong id="percentText">0 %</strong>
+            </div>
+            <div class="progress"><div id="progressFill"></div></div>
+            <p id="resultMessage" class="mini">Los resultados aparecerán al calcular.</p>
+          </article>
+
+          <article class="card explanation-card">
+            <div class="card-head">
+              <span class="number violet">?</span>
+              <h3>¿Qué estás observando?</h3>
+            </div>
+            <p id="explanationText">
+              Explora números complejos y observa cómo evoluciona su órbita.
+            </p>
+          </article>
+        </aside>
+      </div>
+
+      <section class="card educational-card">
+        <p class="eyebrow">FUNDAMENTO MATEMÁTICO</p>
+        <h3>¿Qué es el conjunto de Mandelbrot?</h3>
+        <p>
+          Se define a partir de z₀ = 0 y zₙ₊₁ = zₙ² + c.
+          Si alguna iteración supera |zₙ| = 2, el punto c
+          no pertenece al conjunto. No detectar un escape
+          en un número finito de iteraciones no demuestra pertenencia.
+        </p>
+      </section>
+
+      <section class="card quiz-card" id="quizCard">
+        <p class="eyebrow">05 · ACTIVIDAD PARA VISITANTES</p>
+        <div class="quiz-header">
+          <div>
+            <h3>Desafío Mandelbrot</h3>
+            <p class="mini">Cinco preguntas con dos intentos cada una.</p>
+          </div>
+          <div class="quiz-score">Calificación <strong id="quizScore">0/10</strong></div>
+        </div>
+        <div class="progress quiz-progress"><div id="quizProgress"></div></div>
+        <p id="quizCounter" class="eyebrow">Pregunta 1 de 5</p>
+        <h3 id="quizQuestion"></h3>
+        <div id="quizOptions" class="quiz-options"></div>
+        <p id="quizFeedback" class="quiz-feedback" role="status"></p>
+        <div class="quiz-actions">
+          <button id="quizCheck" class="button primary">Comprobar</button>
+          <button id="quizNext" class="button outline" disabled>Siguiente →</button>
+          <button id="quizReset" class="button muted">↻ Repetir actividad</button>
+        </div>
+        <div id="quizFinal" class="quiz-final" hidden></div>
+      </section>
+
+      <footer>MANDELBROT LAB · PHYMATH 2026 · UNEMI</footer>
+    </main>
+  </section>
+</body>
+</html>
